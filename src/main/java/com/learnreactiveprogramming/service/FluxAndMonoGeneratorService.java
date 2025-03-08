@@ -36,6 +36,14 @@ public class FluxAndMonoGeneratorService {
         return namesFlux;
     }
 
+    public Flux<String> namesFlux_map(int stringLength) {
+        return Flux.fromIterable(List.of("adam", "anna", "jack", "jenny"))
+                .map(String::toUpperCase)
+                .filter(string -> string.length() > stringLength)
+                .map(s -> s.length() + "-" + s)
+                .log();
+    }
+
     public static void main(String[] args) {
         System.out.println("FluxAndMonoGeneratorService.main");
 

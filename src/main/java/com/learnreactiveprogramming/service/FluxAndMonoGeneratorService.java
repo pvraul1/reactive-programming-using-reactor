@@ -44,6 +44,27 @@ public class FluxAndMonoGeneratorService {
                 .log();
     }
 
+    public Mono<String> namesMono_map_filter(int stringLength) {
+        return Mono.just("alex")
+                .map(String::toUpperCase)
+                .filter(string -> string.length() > stringLength)
+                .log();
+    }
+
+    public Flux<String> namesFlux_flatmap(int stringLength) {
+        return Flux.fromIterable(List.of("alex", "ben", "chloe"))
+                .map(String::toUpperCase)
+                .filter(s -> s.length() > stringLength)
+                .flatMap(this::splitString)
+                .log();
+    }
+
+    private Flux<String> splitString(String name) {
+        var charArray = name.split("");
+
+        return Flux.fromArray(charArray);
+    }
+
     public static void main(String[] args) {
         System.out.println("FluxAndMonoGeneratorService.main");
 

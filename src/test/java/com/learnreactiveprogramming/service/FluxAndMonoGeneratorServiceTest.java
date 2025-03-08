@@ -17,4 +17,21 @@ public class FluxAndMonoGeneratorServiceTest {
                 .verifyComplete();
     }
 
+    @Test
+    public void nameMono() {
+        var nameMono = fluxAndMonoGeneratorService.nameMono();
+
+        StepVerifier.create(nameMono)
+                .expectNext("adam")
+                .verifyComplete();
+    }
+
+    @Test
+    public void namesFlux_map() {
+        var namesFlux = fluxAndMonoGeneratorService.namesFlux_map();
+
+        StepVerifier.create(namesFlux)
+                .expectNext("ADAM", "ANNA", "JACK", "JENNY")
+                .verifyComplete();
+    }
 }

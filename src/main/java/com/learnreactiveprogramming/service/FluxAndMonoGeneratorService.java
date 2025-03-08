@@ -29,6 +29,13 @@ public class FluxAndMonoGeneratorService {
                 .log();
     }
 
+    public Flux<String> namesFlux_immutability() {
+        var namesFlux = Flux.fromIterable(List.of("adam", "anna", "jack", "jenny"));
+        namesFlux.map(String::toUpperCase);
+
+        return namesFlux;
+    }
+
     public static void main(String[] args) {
         System.out.println("FluxAndMonoGeneratorService.main");
 

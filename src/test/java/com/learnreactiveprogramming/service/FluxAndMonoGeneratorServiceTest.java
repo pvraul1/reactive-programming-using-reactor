@@ -127,4 +127,24 @@ public class FluxAndMonoGeneratorServiceTest {
                 .verifyComplete();
     }
 
+    @Test
+    public void namesFlux_transform_1() {
+        int stringLength = 6;
+        var namesFlux = fluxAndMonoGeneratorService.namesFlux_transform(stringLength);
+
+        StepVerifier.create(namesFlux)
+                .expectNext("default")
+                .verifyComplete();
+    }
+
+    @Test
+    public void namesFlux_transform_switchifEmpty() {
+        int stringLength = 6;
+        var namesFlux = fluxAndMonoGeneratorService.namesFlux_transform_switchifEmpty(stringLength);
+
+        StepVerifier.create(namesFlux)
+                .expectNext("D", "E", "F", "A", "U", "L", "T")
+                .verifyComplete();
+    }
+
 }

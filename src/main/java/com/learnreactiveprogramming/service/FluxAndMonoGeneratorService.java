@@ -51,6 +51,17 @@ public class FluxAndMonoGeneratorService {
         return Mono.just("alex")
                 .map(String::toUpperCase)
                 .filter(string -> string.length() > stringLength)
+                .defaultIfEmpty("default")
+                .log();
+    }
+
+    public Mono<String> namesMono_map_filter_switchIfEmpty(int stringLength) {
+        Mono<String> defaultMono = Mono.just("default");
+
+        return Mono.just("alex")
+                .map(String::toUpperCase)
+                .filter(string -> string.length() > stringLength)
+                .switchIfEmpty(defaultMono)
                 .log();
     }
 
@@ -126,6 +137,52 @@ public class FluxAndMonoGeneratorService {
                 .transform(filterMap) // "A", "L", "E", "X", "C", "H", "L", "O", "E"
                 .switchIfEmpty(defaultFlux)
                 .log();
+    }
+
+    public Flux<String> explore_concat() {
+        var abcFlux = Flux.just("A", "B", "C");
+        var defFlux = Flux.just("D", "E", "F");
+
+        return Flux.concat(abcFlux, defFlux).log();
+    }
+
+    public Flux<String> explore_concatWith() {
+        var abcFlux = Flux.just("A", "B", "C");
+        var defFlux = Flux.just("D", "E", "F");
+
+        return abcFlux.concatWith(defFlux).log();
+    }
+
+    public Flux<String> explore_concatWith_mono() {
+        var aMono = Mono.just("A");
+        var bMono = Mono.just("B");
+
+        return aMono.concatWith(bMono).log();
+    }
+
+    public Flux<String> explore_merge() {
+        var abcFlux = Flux.just("A", "B", "C")
+                .delayElements(Duration.ofMillis(100));
+        var defFlux = Flux.just("D", "E", "F")
+                .delayElements(Duration.ofMillis(125));
+
+        return Flux.merge(abcFlux, defFlux).log(); // "A", "D", "B", "E", "C", "F"
+    }
+
+    public Flux<String> explore_mergeWith() {
+        var abcFlux = Flux.just("A", "B", "C")
+                .delayElements(Duration.ofMillis(100));
+        var defFlux = Flux.just("D", "E", "F")
+                .delayElements(Duration.ofMillis(125));
+
+        return abcFlux.mergeWith(defFlux).log(); // "A", "D", "B", "E", "C", "F"
+    }
+
+    public Flux<String> explore_mergeWith_mono() {
+        var aMono = Mono.just("A");
+        var bMono = Mono.just("B");
+
+        return aMono.mergeWith(bMono).log(); // "A","B"
     }
 
     private Flux<String> splitString(String name) {

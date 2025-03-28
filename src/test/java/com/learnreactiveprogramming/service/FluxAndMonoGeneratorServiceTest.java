@@ -220,4 +220,50 @@ public class FluxAndMonoGeneratorServiceTest {
                 .expectNext("A","B")
                 .verifyComplete();
     }
+
+    @Test
+    public void explore_merge_sequential() {
+        var namesFlux = fluxAndMonoGeneratorService.explore_merge_sequential();
+
+        StepVerifier.create(namesFlux)
+                .expectNext("A", "B", "C", "D", "E", "F")
+                .verifyComplete();
+    }
+
+    @Test
+    public void explore_zip() {
+        var namesFlux = fluxAndMonoGeneratorService.explore_zip();
+
+        StepVerifier.create(namesFlux)
+                .expectNext("AD", "BE", "CF")
+                .verifyComplete();
+    }
+
+    @Test
+    public void explore_zip_1() {
+        var namesFlux = fluxAndMonoGeneratorService.explore_zip_1();
+
+        StepVerifier.create(namesFlux)
+                .expectNext("AD14", "BE25", "CF36")
+                .verifyComplete();
+    }
+
+    @Test
+    public void explore_zipWith() {
+        var namesFlux = fluxAndMonoGeneratorService.explore_zipWith();
+
+        StepVerifier.create(namesFlux)
+                .expectNext("AD", "BE", "CF")
+                .verifyComplete();
+    }
+
+    @Test
+    public void explore_zipWith_mono() {
+        var namesMono = fluxAndMonoGeneratorService.explore_zipWith_mono();
+
+        StepVerifier.create(namesMono)
+                .expectNext("AB")
+                .verifyComplete();
+    }
+
 }

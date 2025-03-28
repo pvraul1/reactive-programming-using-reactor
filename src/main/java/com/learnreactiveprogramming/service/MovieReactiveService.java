@@ -44,4 +44,18 @@ public class MovieReactiveService {
                 .log();
     }
 
+    public Mono<Movie> getMovieById_flatMap(Long movieId) {
+        var movieInfoMono = movieInfoService.retrieveMovieInfoMonoUsingId(movieId);
+
+        return movieInfoMono
+                .flatMap(movieInfo -> {
+                    Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movieId)
+                            .collectList();
+
+                    return reviewsMono
+                            .map(reviews -> new Movie(movieInfo, reviews));
+                })
+                .log();
+    }
+
 }

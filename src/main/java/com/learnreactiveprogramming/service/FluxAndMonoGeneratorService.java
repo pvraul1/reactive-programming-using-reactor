@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
@@ -17,6 +18,7 @@ import reactor.util.function.Tuple2;
  * @version 08/03/2025 - 15:25
  * @since 1.17
  */
+@Slf4j
 public class FluxAndMonoGeneratorService {
 
     public Flux<String> namesFlux() {
@@ -45,6 +47,10 @@ public class FluxAndMonoGeneratorService {
                 .map(String::toUpperCase)
                 .filter(string -> string.length() > stringLength)
                 .map(s -> s.length() + "-" + s)
+                .doOnNext(name -> log.info("Name is: {}", name))
+                .doOnSubscribe(subscription -> log.info("Subscription is: {}", subscription))
+                .doOnComplete(() -> log.info("Inside the complete callback"))
+                .doFinally(signalType -> log.info("Inside the doFinally callback: {}", signalType))
                 .log();
     }
 

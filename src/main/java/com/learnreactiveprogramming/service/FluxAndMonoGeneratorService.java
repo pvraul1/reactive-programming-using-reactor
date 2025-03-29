@@ -1,5 +1,6 @@
 package com.learnreactiveprogramming.service;
 
+import com.learnreactiveprogramming.exception.ReactorException;
 import java.time.Duration;
 import java.util.List;
 import java.util.Random;
@@ -302,8 +303,25 @@ public class FluxAndMonoGeneratorService {
                 })
                 .concatWith(Flux.just("D"))
                 .onErrorContinue((ex, name) -> {
-                    log.error("Exception is: {}", ex.getMessage());
+                    log.error("Exception is: {}", ex);
                     log.info("Name is: {}", name);
+                })
+                .log();
+    }
+
+    public Flux<String> explore_OnErrorMap() {
+        return Flux.just("A", "B", "C")
+                .map(name -> {
+                    if (name.equals("B")) {
+                        throw new IllegalStateException("Exception occurred");
+                    }
+                    return name;
+                })
+                .concatWith(Flux.just("D"))
+                .onErrorMap((ex) -> {
+                    log.error("Exception is: {}", ex);
+
+                    return new ReactorException(ex, ex.getMessage());
                 })
                 .log();
     }

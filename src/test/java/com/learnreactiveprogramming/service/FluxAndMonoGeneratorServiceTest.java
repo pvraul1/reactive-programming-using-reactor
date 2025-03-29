@@ -1,5 +1,6 @@
 package com.learnreactiveprogramming.service;
 
+import com.learnreactiveprogramming.exception.ReactorException;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import reactor.test.StepVerifier;
@@ -338,5 +339,15 @@ public class FluxAndMonoGeneratorServiceTest {
         StepVerifier.create(valueFlux)
                 .expectNext("A", "C", "D")
                 .verifyComplete();
+    }
+
+    @Test
+    public void explore_OnErrorMap() {
+        var valueFlux = fluxAndMonoGeneratorService.explore_OnErrorMap();
+
+        StepVerifier.create(valueFlux)
+                .expectNext("A")
+                .expectError(ReactorException.class)
+                .verify();
     }
 }

@@ -309,4 +309,25 @@ public class FluxAndMonoGeneratorServiceTest {
                 .verifyComplete();
     }
 
+    @Test
+    public void explore_OnErrorResume() {
+        var e = new IllegalStateException("Not a valid state");
+        var valueFlux = fluxAndMonoGeneratorService.explore_OnErrorResume(e);
+
+        StepVerifier.create(valueFlux)
+                .expectNext("A", "B", "C")
+                .expectNext("D", "E", "F")
+                .verifyComplete();
+    }
+
+    @Test
+    public void explore_OnErrorResume_1() {
+        var e = new RuntimeException("Not a valid state");
+        var valueFlux = fluxAndMonoGeneratorService.explore_OnErrorResume(e);
+
+        StepVerifier.create(valueFlux)
+                .expectNext("A", "B", "C")
+                .expectError(RuntimeException.class)
+                .verify();
+    }
 }

@@ -276,4 +276,20 @@ public class FluxAndMonoGeneratorService {
                 .log();
     }
 
+    public Flux<String> explore_OnErrorResume(Exception e) {
+        var recoveryFlux = Flux.just("D", "E", "F");
+
+        return Flux.just("A", "B", "C")
+                .concatWith(Flux.error(e))
+                .onErrorResume(ex -> {
+                    log.error("Exception is: {}", ex);
+                    if (ex instanceof IllegalStateException) {
+                        return recoveryFlux;
+                    } else {
+                        return Flux.error(ex);
+                    }
+                })
+                .log();
+    }
+
 }

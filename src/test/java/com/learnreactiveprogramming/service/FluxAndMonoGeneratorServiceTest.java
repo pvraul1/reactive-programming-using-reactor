@@ -360,4 +360,13 @@ public class FluxAndMonoGeneratorServiceTest {
                 .expectError(IllegalStateException.class)
                 .verify();
     }
+
+    @Test
+    public void explore_Mono_OnErrorReturn() {
+        var valueMono = fluxAndMonoGeneratorService.explore_Mono_OnErrorReturn();
+
+        StepVerifier.create(valueMono)
+                .expectNext("abc")
+                .verifyComplete();
+    }
 }

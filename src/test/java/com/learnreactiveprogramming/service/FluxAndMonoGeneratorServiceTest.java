@@ -269,4 +269,34 @@ public class FluxAndMonoGeneratorServiceTest {
                 .verifyComplete();
     }
 
+    @Test
+    public void exception_flux() {
+        var valueFlux = fluxAndMonoGeneratorService.exception_flux();
+
+        StepVerifier.create(valueFlux)
+                .expectNext("A", "B", "C")
+                .expectError(RuntimeException.class)
+                .verify();
+    }
+
+    @Test
+    public void exception_flux_1() {
+        var valueFlux = fluxAndMonoGeneratorService.exception_flux();
+
+        StepVerifier.create(valueFlux)
+                .expectNext("A", "B", "C")
+                .expectError()
+                .verify();
+    }
+
+    @Test
+    public void exception_flux_2() {
+        var valueFlux = fluxAndMonoGeneratorService.exception_flux();
+
+        StepVerifier.create(valueFlux)
+                .expectNext("A", "B", "C")
+                .expectErrorMessage("Exception occurred")
+                .verify();
+    }
+
 }

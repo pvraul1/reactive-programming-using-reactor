@@ -292,4 +292,20 @@ public class FluxAndMonoGeneratorService {
                 .log();
     }
 
+    public Flux<String> explore_OnErrorContinue() {
+        return Flux.just("A", "B", "C")
+                .map(name -> {
+                    if (name.equals("B")) {
+                        throw new IllegalStateException("Exception occurred");
+                    }
+                    return name;
+                })
+                .concatWith(Flux.just("D"))
+                .onErrorContinue((ex, name) -> {
+                    log.error("Exception is: {}", ex.getMessage());
+                    log.info("Name is: {}", name);
+                })
+                .log();
+    }
+
 }

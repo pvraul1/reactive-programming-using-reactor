@@ -369,4 +369,23 @@ public class FluxAndMonoGeneratorServiceTest {
                 .expectNext("abc")
                 .verifyComplete();
     }
+
+    @Test
+    public void exception_mono_onErrorContinue_abc() {
+        var input = "abc";
+        var valueMono = fluxAndMonoGeneratorService.exception_mono_onErrorContinue(input);
+
+        StepVerifier.create(valueMono)
+                .verifyComplete();
+    }
+
+    @Test
+    public void exception_mono_onErrorContinue_reactor() {
+        var input = "reactor";
+        var valueMono = fluxAndMonoGeneratorService.exception_mono_onErrorContinue(input);
+
+        StepVerifier.create(valueMono)
+                .expectNext(input)
+                .verifyComplete();
+    }
 }

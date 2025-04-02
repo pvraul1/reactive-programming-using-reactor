@@ -344,4 +344,31 @@ public class FluxAndMonoGeneratorService {
                 .log();
     }
 
+    public Mono<Object> exception_mono_onErrorMap(Exception e) {
+        return Mono.just("B")
+                .map(value -> {
+                    throw new RuntimeException("Exception occurred");
+                })
+                .onErrorMap(ex -> {
+                    log.error("Exception is: {}", ex);
+                    return new ReactorException(ex, ex.getMessage());
+                })
+                .log();
+    }
+
+    public Mono<String> exception_mono_onErrorContinue(String input) {
+        return Mono.just(input)
+                .map(value -> {
+                    if ("abc".equals(value)) {
+                        throw new RuntimeException("Exception occurred");
+                    }
+                    return value;
+                })
+                .onErrorContinue((ex, input1) -> {
+                    log.error("Exception is: {}", ex);
+                    log.info("Value that caused the exception is: {}", input1);
+                })
+                .log();
+    }
+
 }

@@ -90,6 +90,52 @@ public class MovieReactiveService {
                 .log();
     }
 
+    public Flux<Movie> getAllMovies_repeat() {
+        var moviesInfoFlux = movieInfoService.retrieveMoviesFlux();
+        return moviesInfoFlux
+                .flatMap(movieInfo -> {
+                    Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movieInfo.getMovieInfoId())
+                            .collectList();
+
+                    return reviewsMono
+                            .map(reviews -> new Movie(movieInfo, reviews));
+                })
+                .onErrorMap((exception) -> {
+                    log.error("Exception is: {}", String.valueOf(exception));
+                    if (exception instanceof NetworkException) {
+                        throw new MovieException(exception.getMessage());
+                    } else {
+                        throw new ServiceException(exception.getMessage());
+                    }
+                })
+                .retryWhen(getRetryBackoffSpec())
+                .repeat()
+                .log();
+    }
+
+    public Flux<Movie> getAllMovies_repeat_n(long n) {
+        var moviesInfoFlux = movieInfoService.retrieveMoviesFlux();
+        return moviesInfoFlux
+                .flatMap(movieInfo -> {
+                    Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movieInfo.getMovieInfoId())
+                            .collectList();
+
+                    return reviewsMono
+                            .map(reviews -> new Movie(movieInfo, reviews));
+                })
+                .onErrorMap((exception) -> {
+                    log.error("Exception is: {}", String.valueOf(exception));
+                    if (exception instanceof NetworkException) {
+                        throw new MovieException(exception.getMessage());
+                    } else {
+                        throw new ServiceException(exception.getMessage());
+                    }
+                })
+                .retryWhen(getRetryBackoffSpec())
+                .repeat(n)
+                .log();
+    }
+
     private static RetryBackoffSpec getRetryBackoffSpec() {
         var retryWhen = Retry.backoff(3, Duration.ofMillis(500))
                 .filter(exception -> exception instanceof MovieException)

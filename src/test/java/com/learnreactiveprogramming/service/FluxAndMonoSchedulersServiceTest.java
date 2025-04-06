@@ -34,4 +34,12 @@ public class FluxAndMonoSchedulersServiceTest {
                 .verifyComplete();
     }
 
+    @Test
+    void explore_parallel() {
+        var flux = fluxAndMonoSchedulersService.explore_parallel();
+
+        StepVerifier.create(flux)
+                .expectNextCount(3)
+                .verifyComplete();
+    }
 }

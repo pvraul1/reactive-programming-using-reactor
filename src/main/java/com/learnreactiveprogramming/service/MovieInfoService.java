@@ -1,15 +1,27 @@
 package com.learnreactiveprogramming.service;
 
 import com.learnreactiveprogramming.domain.MovieInfo;
+import java.time.LocalDate;
+import java.util.List;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import static com.learnreactiveprogramming.util.CommonUtil.delay;
 
+@RequiredArgsConstructor
+@NoArgsConstructor(force = true)
 public class MovieInfoService {
+
+    private final WebClient webClient;
+
+    public Flux<MovieInfo> retrieveAllMovieInfo_RestClient() {
+        return webClient.get().uri("/v1/movie_infos")
+                .retrieve()
+                .bodyToFlux(MovieInfo.class);
+    }
 
     public  Flux<MovieInfo> retrieveMoviesFlux(){
 

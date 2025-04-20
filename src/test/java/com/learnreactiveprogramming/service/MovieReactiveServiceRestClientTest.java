@@ -4,8 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.test.StepVerifier;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class MovieReactiveServiceRestClientTest {
 
     WebClient webClient = WebClient.builder()
@@ -24,6 +22,16 @@ class MovieReactiveServiceRestClientTest {
 
         StepVerifier.create(moviesFlux)
                 .expectNextCount(7)
+                .verifyComplete();
+    }
+
+    @Test
+    void getMovieById_RestClient() {
+        var movieId = 1L;
+        var movieMono = movieReactiveService.getMovieById_RestClient(movieId);
+
+        StepVerifier.create(movieMono)
+                .expectNextCount(1)
                 .verifyComplete();
     }
 
